@@ -40,7 +40,6 @@ struct TaskCardView: View {
             .frame(width: 180, alignment: .leading) // fixed width for stability
             .padding(.leading,8)
 
-            
             Text(priority)
                 .font(.system(size: 12))
                 .foregroundColor(Color(.systemRed))
@@ -54,27 +53,6 @@ struct TaskCardView: View {
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6))
         .cornerRadius(12)
-    }
-}
-
-
-
-
-
-
-
-
-
-struct CheckboxToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        Button {
-            configuration.isOn.toggle()
-        } label: {
-            HStack {
-                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
-                configuration.label
-            }
-        }
     }
 }
 

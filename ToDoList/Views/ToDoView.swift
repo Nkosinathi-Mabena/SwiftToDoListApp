@@ -20,7 +20,6 @@ struct ToDoView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            
 
            HStack {
                 Text("Segments")
@@ -32,9 +31,7 @@ struct ToDoView: View {
                     .onTapGesture {showAddTaskSheet = true}
             }
             
-            
-
-            VStack(spacing: 15) {
+                VStack(spacing: 15) {
                 HStack(spacing: 15) {
                     ReminderCard(icon: "hourglass.bottomhalf.fill", title: "All Task", count: 2)
                         .onTapGesture { selectedCard = "Tasks" }
@@ -89,11 +86,8 @@ struct ToDoView: View {
                 showAddTaskSheet = false
             }
         }
-
-        
     }
 }
-
 
 struct RemindersView_Previews: PreviewProvider {
     static var previews: some View {

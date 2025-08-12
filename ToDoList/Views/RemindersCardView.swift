@@ -19,9 +19,7 @@ struct ReminderCard: View {
                     .foregroundColor(.white)
                     .frame(width: 36, height: 36)
                     .background(Circle().fill(Color.black))
-                
-                
-                
+
                 Text(title)
                     .font(.subheadline)
                     .foregroundColor(.gray)
