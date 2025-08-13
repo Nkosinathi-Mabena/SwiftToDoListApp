@@ -11,6 +11,7 @@ struct AddTaskSheetView: View {
     @Binding var taskDescription: String
     @Binding var taskDate: Date
     @Binding var taskPriority: String
+    @Binding var reminderEnabled: Bool
     var onSave: () -> Void
     
     var body: some View {
@@ -23,7 +24,7 @@ struct AddTaskSheetView: View {
                 .textFieldStyle(.roundedBorder)
                 .padding(.horizontal)
             
-            DatePicker("Select Date", selection: $taskDate, displayedComponents: .date)
+            DatePicker("Select Due Date", selection: $taskDate, displayedComponents: .date)
                 .padding(.horizontal)
             
             Picker("Priority", selection: $taskPriority) {
@@ -33,6 +34,8 @@ struct AddTaskSheetView: View {
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)
+            
+            Toggle("Set Reminder", isOn: $reminderEnabled)
             
             Button("Save Task") {
                 onSave()
