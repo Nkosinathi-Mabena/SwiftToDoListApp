@@ -1,0 +1,30 @@
+//
+//  File.swift
+//  ToDoList
+//
+//  Created by Nathi Mabena on 2025/08/12.
+//
+
+import Foundation //test
+
+enum Priority: String {
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+}
+
+struct Task: Identifiable{
+    let id: UUID
+    var description: String
+    var dueDate: Date
+    var priority: Priority
+    var reminderEnabled: Bool
+    
+    init(id: UUID, description: String, dueDate: Date, priority: Priority, reminderEnabled: Bool) {
+        self.id = id
+        self.description = description
+        self.dueDate = dueDate
+        self.priority = priority
+        self.reminderEnabled = reminderEnabled
+    }
+}

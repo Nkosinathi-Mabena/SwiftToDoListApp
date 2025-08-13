@@ -16,8 +16,8 @@ struct ToDoView: View {
     @State private var taskDescription = ""
     @State private var taskDate = Date()
     @State private var taskPriority = "Low"
+    @State private var reminderEnabled = true
 
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
 
@@ -81,7 +81,8 @@ struct ToDoView: View {
             AddTaskSheetView(
                 taskDescription: $taskDescription,
                 taskDate: $taskDate,
-                taskPriority: $taskPriority
+                taskPriority: $taskPriority,
+                reminderEnabled: $reminderEnabled
             ) {
                 showAddTaskSheet = false
             }
