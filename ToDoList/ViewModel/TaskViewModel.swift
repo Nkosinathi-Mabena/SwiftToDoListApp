@@ -43,5 +43,36 @@ final class TaskViewModel: ObservableObject {
         updatedTask.isCompleted.toggle()
         updateTask(task: updatedTask)
     }
+    
+    func filteredTasks(selectedCard: String?, selectedSegment: String?) -> [Task] {
+        switch selectedCard {
+        case "Tasks":
+            return tasks.filter {$0.isCompleted == (selectedSegment == "Completed") } //$0 shortcut rather than task in task.isCompleted
+        case "priority":
+            return tasks.filter { $0.priority.rawValue == selectedSegment }
+        case "Over Due":
+            return tasks.filter { !$0.isCompleted && $0.dueDate < Calendar.current.startOfDay(for: Date()) } // not Date() because that includes present day
+        case "Today":
+            return tasks.filter { Calendar.current.isDateInToday($0.dueDate) } // check if due date is current date today and returns true or false
+        default:
+            return []
+        }
+    }
 
+    func taskCount (cardCount: String?) -> Int{
+        switch cardCount{
+        case "Tasks":
+            return tasks.count
+        case "priority":
+            return tasks.count
+        case "Today":
+            return tasks.filter{Calendar.current.isDateInToday($0.dueDate)}.count
+        case "Over Due":
+            return tasks.filter{
+                !$0.isCompleted && $0.dueDate < Calendar.current.startOfDay(for: Date())
+            }.count
+        default:
+            return 0
+        }
+    }
 }

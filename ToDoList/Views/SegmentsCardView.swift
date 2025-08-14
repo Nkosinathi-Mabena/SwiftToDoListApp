@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct ReminderCard: View {
+struct SegmentsCard: View {
     var icon: String
     var title: String
     var count: Int

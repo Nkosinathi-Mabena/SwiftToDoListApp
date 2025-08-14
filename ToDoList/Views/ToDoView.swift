@@ -11,9 +11,11 @@ struct ToDoView: View {
     
     @StateObject private var viewModel = TaskViewModel()
     @State private var selectedCard: String? = "Tasks"
-    @State private var selectedSegment: String = ""
+    @State private var selectedSegment: String = "Incompleted"
     @State private var isTaskChecked = false
     @State private var showAddTaskSheet = false
+    @State var selectedTask: Task?
+            
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -25,22 +27,29 @@ struct ToDoView: View {
                 Spacer()
                 Image(systemName: "plus")
                     .font(.title2)
-                    .onTapGesture {showAddTaskSheet = true}
+                    .onTapGesture {
+                        showAddTaskSheet = true
+                        selectedTask = nil
+                    }
             }
             
                 VStack(spacing: 15) {
                 HStack(spacing: 15) {
-                    ReminderCard(icon: "hourglass.bottomhalf.fill", title: "All Task", count: 2)
-                        .onTapGesture { selectedCard = "Tasks" }
-                    ReminderCard(icon: "exclamationmark.triangle.fill", title: "priority", count: 1)
-                        .onTapGesture { selectedCard = "priority" }
+                    SegmentsCard(icon: "house.fill", title: "All Task", count: viewModel.taskCount(cardCount: "Tasks"))
+                        .onTapGesture { selectedCard = "Tasks"
+                            selectedSegment = "Incompleted" }
+                    SegmentsCard(icon: "exclamationmark.triangle.fill", title: "priority", count: viewModel.taskCount(cardCount: "priority"))
+                        .onTapGesture { selectedCard = "priority"
+                            selectedSegment = "Low"}
 
                 }
                 HStack(spacing: 15) {
-                    ReminderCard(icon: "house.fill", title: "Today", count: 2)
-                        .onTapGesture { selectedCard = "Today" }
-                    ReminderCard(icon: "heart.circle", title: "Reminders", count: 2)
-                        .onTapGesture { selectedCard = "Reminders" }
+                    SegmentsCard(icon: "hourglass.bottomhalf.fill", title: "Today", count: viewModel.taskCount(cardCount:"Today"))
+                        .onTapGesture { selectedCard = "Today"
+                            selectedSegment = "Today's Tasks"}
+                    SegmentsCard(icon: "flag.fill", title: "Over Due", count: viewModel.taskCount(cardCount:"Over Due"))
+                        .onTapGesture { selectedCard = "Over Due"
+                            selectedSegment = "Over Due"}
                 }
             }
             .navigationTitle("Segments")
@@ -61,9 +70,11 @@ struct ToDoView: View {
             VStack {
                 ScrollView {
                     LazyVStack(spacing: 13) {
-                        ForEach(viewModel.tasks) { task in
-                            TaskCardView(task: task, viewModel: viewModel
-                            )
+                        ForEach(viewModel.filteredTasks(selectedCard: selectedCard, selectedSegment: selectedSegment)) { task in
+                            TaskCardView(task: task, viewModel: viewModel)
+                                .onTapGesture{
+                                    selectedTask = task
+                                }
                         }
                     }
                     .padding(.vertical)
@@ -75,12 +86,15 @@ struct ToDoView: View {
         }
         .padding()
         .sheet(isPresented: $showAddTaskSheet) {
-            AddTaskSheetView(viewModel: viewModel)
+                  AddTaskSheetView(viewModel: viewModel)
+              }
+        .sheet(item: $selectedTask) { task in // now selectedTask is a trigger
+            AddTaskSheetView(viewModel: viewModel, taskToEdit: task)
         }
     }
 }
 
-struct RemindersView_Previews: PreviewProvider {
+struct ToDoView_Previews: PreviewProvider {
     static var previews: some View {
         ToDoView()
     }

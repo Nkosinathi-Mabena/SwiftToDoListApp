@@ -37,7 +37,7 @@ struct TaskCardView: View {
                     .bold()
                 
             }
-            .frame(width: 180, alignment: .leading) // fixed width for stability
+            .frame(width: 180, alignment: .leading) 
             .padding(.leading,8)
 
             Text(task.priority.rawValue)

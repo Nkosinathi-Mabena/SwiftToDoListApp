@@ -10,10 +10,10 @@ import Foundation
 struct SegmentOptionsData {
     static func getOptions(for card: String?) -> [String] {
         switch card {
-        case "Tasks": return ["Complete", "Incomplete"]
+        case "Tasks": return ["Incompleted", "Completed"]
         case "priority": return ["Low", "Medium", "High"]
-        case "Reminders": return ["Marked for Reminder"]
-        case "Today": return ["Today’s Tasks"]
+        case "Over Due": return ["Over Due"]
+        case "Today": return ["Today's Tasks"]
         default: return []
         }
     }
