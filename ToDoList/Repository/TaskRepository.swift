@@ -10,7 +10,7 @@ import Foundation
 
 protocol TaskRepositoryProtocol { // basically an interface
     func addTask(_ task: Task)
-    func fetchTask () -> [Task]
+    func fetchTasks () -> [Task]
     func updateTask(_ task: Task)
     func deleteTask(_ task: Task)
 }
@@ -25,10 +25,11 @@ final class TaskRepository: TaskRepositoryProtocol {
         entity.taskDate = task.dueDate
         entity.taskPriority = task.priority.rawValue
         entity.reminderEnabled = task.reminderEnabled
+        entity.taskCompleted = task.isCompleted
         manager.saveContext()
     }
     
-    func fetchTask() -> [Task] {
+    func fetchTasks() -> [Task] {
         let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         do {
             let entities = try manager.context.fetch(request)
@@ -37,8 +38,9 @@ final class TaskRepository: TaskRepositoryProtocol {
                     id: entity.id ?? UUID(),
                     description: entity.taskDescription ?? "",
                     dueDate: entity.taskDate ?? Date(),
-                     priority: Priority(rawValue: entity.taskPriority ?? "Low") ?? .low,
-                    reminderEnabled: entity.reminderEnabled
+                    priority: Priority(rawValue: entity.taskPriority ?? "Low") ?? .low,
+                    reminderEnabled: entity.reminderEnabled,
+                    isCompleted: entity.taskCompleted      
                 )
             }
         } catch {
@@ -55,6 +57,7 @@ final class TaskRepository: TaskRepositoryProtocol {
             entity.taskDate = task.dueDate
             entity.taskPriority = task.priority.rawValue
             entity.reminderEnabled = task.reminderEnabled
+            entity.taskCompleted = task.isCompleted // in addTask & updateTask
             manager.saveContext()
         }
     }

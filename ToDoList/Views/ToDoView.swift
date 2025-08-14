@@ -9,14 +9,11 @@ import SwiftUI
 
 struct ToDoView: View {
     
+    @StateObject private var viewModel = TaskViewModel()
     @State private var selectedCard: String? = "Tasks"
     @State private var selectedSegment: String = ""
     @State private var isTaskChecked = false
     @State private var showAddTaskSheet = false
-    @State private var taskDescription = ""
-    @State private var taskDate = Date()
-    @State private var taskPriority = "Low"
-    @State private var reminderEnabled = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -48,7 +45,6 @@ struct ToDoView: View {
             }
             .navigationTitle("Segments")
             
-            
             Text("Tasks")
                 .font(.largeTitle)
                 .bold()
@@ -65,8 +61,9 @@ struct ToDoView: View {
             VStack {
                 ScrollView {
                     LazyVStack(spacing: 13) {
-                        ForEach(0..<10, id: \.self) { _ in
-                            TaskCardView(priority: "High",date: "25 Sep 2025",description: "Work on Methodology for belgium campus", isCheck: $isTaskChecked)
+                        ForEach(viewModel.tasks) { task in
+                            TaskCardView(task: task, viewModel: viewModel
+                            )
                         }
                     }
                     .padding(.vertical)
@@ -78,14 +75,7 @@ struct ToDoView: View {
         }
         .padding()
         .sheet(isPresented: $showAddTaskSheet) {
-            AddTaskSheetView(
-                taskDescription: $taskDescription,
-                taskDate: $taskDate,
-                taskPriority: $taskPriority,
-                reminderEnabled: $reminderEnabled
-            ) {
-                showAddTaskSheet = false
-            }
+            AddTaskSheetView(viewModel: viewModel)
         }
     }
 }

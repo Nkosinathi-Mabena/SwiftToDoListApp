@@ -19,4 +19,5 @@ struct Task: Identifiable{
     var dueDate: Date
     var priority: Priority
     var reminderEnabled: Bool
+    var isCompleted: Bool
 }

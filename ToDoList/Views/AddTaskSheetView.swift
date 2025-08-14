@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct AddTaskSheetView: View {
-    @Binding var taskDescription: String
-    @Binding var taskDate: Date
-    @Binding var taskPriority: String
-    @Binding var reminderEnabled: Bool
-    var onSave: () -> Void
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: TaskViewModel
     
+    @State private var taskDescription: String = ""
+    @State private var taskDate: Date = Date()
+    @State private var taskPriority: Priority = .low
+    @State private var reminderEnabled: Bool = false
+    
+       
     var body: some View {
         VStack(spacing: 20) {
             Text("Add Task")
@@ -28,9 +31,9 @@ struct AddTaskSheetView: View {
                 .padding(.horizontal)
             
             Picker("Priority", selection: $taskPriority) {
-                Text("Low").tag("Low")
-                Text("Medium").tag("Medium")
-                Text("High").tag("High")
+                Text("Low").tag(Priority.low)
+                Text("Medium").tag(Priority.medium)
+                Text("High").tag(Priority.high)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)
@@ -38,7 +41,8 @@ struct AddTaskSheetView: View {
             Toggle("Set Reminder", isOn: $reminderEnabled)
             
             Button("Save Task") {
-                onSave()
+                viewModel.addTask( description: taskDescription, dueDate: taskDate, priority: taskPriority, reminderEnabled: reminderEnabled)
+                dismiss()
             }
             .buttonStyle(.borderedProminent)
             
