@@ -10,7 +10,6 @@ import Foundation
 
 final class CoreDataManager{
     
-    
     static let shared = CoreDataManager()
     
     let persistentContainer: NSPersistentContainer
@@ -37,5 +36,4 @@ final class CoreDataManager{
             }
         }
     }
-    
 }

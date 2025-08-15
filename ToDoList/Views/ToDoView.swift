@@ -16,7 +16,6 @@ struct ToDoView: View {
     @State private var showAddTaskSheet = false
     @State var selectedTask: Task?
             
-
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
 
@@ -25,12 +24,13 @@ struct ToDoView: View {
                     .font(.largeTitle)
                     .bold()
                 Spacer()
-                Image(systemName: "plus")
-                    .font(.title2)
-                    .onTapGesture {
-                        showAddTaskSheet = true
-                        selectedTask = nil
-                    }
+               Button {
+                   showAddTaskSheet = true
+                   selectedTask = nil
+               } label: {
+                   Image(systemName: "plus")
+                       .font(.title2)
+               }
             }
             
                 VStack(spacing: 15) {

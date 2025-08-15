@@ -19,7 +19,7 @@ struct AddTaskSheetView: View {
     @State private var showDeleteAlert = false    
     
     init(viewModel: TaskViewModel, taskToEdit: Task? = nil) {
-        self.viewModel = viewModel
+        self.viewModel = viewModel // to remember the instance used by the parent view
         
         self.taskToEdit = taskToEdit
         
