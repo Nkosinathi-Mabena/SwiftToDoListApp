@@ -44,35 +44,33 @@ final class TaskViewModel: ObservableObject {
         updateTask(task: updatedTask)
     }
     
-    func filteredTasks(selectedCard: String?, selectedSegment: String?) -> [Task] {
+    func filteredTasks(selectedCard: CardType?, selectedSegment: String?) -> [Task] {
+        guard let selectedCard = selectedCard else { return [] }
+        
         switch selectedCard {
-        case "Tasks":
-            return tasks.filter {$0.isCompleted == (selectedSegment == "Completed") } //$0 shortcut rather than task in task.isCompleted
-        case "priority":
+        case .tasks:
+            return tasks.filter { $0.isCompleted == (selectedSegment == "Completed") }
+        case .priority:
             return tasks.filter { $0.priority.rawValue == selectedSegment }
-        case "Over Due":
-            return tasks.filter { !$0.isCompleted && $0.dueDate < Calendar.current.startOfDay(for: Date()) } // not Date() because that includes present day
-        case "Today":
-            return tasks.filter { Calendar.current.isDateInToday($0.dueDate) } // check if due date is current date today and returns true or false
-        default:
-            return []
+        case .overdue:
+            return tasks.filter { !$0.isCompleted && $0.dueDate < Calendar.current.startOfDay(for: Date()) }
+        case .today:
+            return tasks.filter { Calendar.current.isDateInToday($0.dueDate) }
         }
     }
 
-    func taskCount (cardCount: String?) -> Int{
-        switch cardCount{
-        case "Tasks":
+    func taskCount(cardCount: CardType) -> Int {
+        switch cardCount {
+        case .tasks, .priority:
             return tasks.count
-        case "priority":
-            return tasks.count
-        case "Today":
-            return tasks.filter{Calendar.current.isDateInToday($0.dueDate)}.count
-        case "Over Due":
-            return tasks.filter{
+        case .today:
+            return tasks.filter { Calendar.current.isDateInToday($0.dueDate) }.count
+        case .overdue:
+            return tasks.filter {
                 !$0.isCompleted && $0.dueDate < Calendar.current.startOfDay(for: Date())
             }.count
-        default:
-            return 0
         }
     }
+
+
 }

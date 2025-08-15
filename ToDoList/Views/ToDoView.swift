@@ -10,10 +10,11 @@ import SwiftUI
 struct ToDoView: View {
     
     @StateObject private var viewModel = TaskViewModel()
-    @State private var selectedCard: String? = "Tasks"
+    @State private var selectedCard: CardType? = .tasks
     @State private var selectedSegment: String = "Incompleted"
     @State private var isTaskChecked = false
     @State private var showAddTaskSheet = false
+    
     @State var selectedTask: Task?
             
     var body: some View {
@@ -35,21 +36,20 @@ struct ToDoView: View {
             
                 VStack(spacing: 15) {
                 HStack(spacing: 15) {
-                    SegmentsCard(icon: "house.fill", title: "All Task", count: viewModel.taskCount(cardCount: "Tasks"))
-                        .onTapGesture { selectedCard = "Tasks"
-                            selectedSegment = "Incompleted" }
-                    SegmentsCard(icon: "exclamationmark.triangle.fill", title: "priority", count: viewModel.taskCount(cardCount: "priority"))
-                        .onTapGesture { selectedCard = "priority"
-                            selectedSegment = "Low"}
+                    SegmentsCard(icon: "house.fill", title: "All Task", count: viewModel.taskCount(cardCount: .tasks))
+                        .onTapGesture { selectedCard = .tasks; selectedSegment = "Incompleted" }
+
+                    SegmentsCard(icon: "exclamationmark.triangle.fill", title: "priority", count: viewModel.taskCount(cardCount: .priority))
+                        .onTapGesture { selectedCard = .priority; selectedSegment = "Low" }
+
 
                 }
                 HStack(spacing: 15) {
-                    SegmentsCard(icon: "hourglass.bottomhalf.fill", title: "Today", count: viewModel.taskCount(cardCount:"Today"))
-                        .onTapGesture { selectedCard = "Today"
-                            selectedSegment = "Today's Tasks"}
-                    SegmentsCard(icon: "flag.fill", title: "Over Due", count: viewModel.taskCount(cardCount:"Over Due"))
-                        .onTapGesture { selectedCard = "Over Due"
-                            selectedSegment = "Over Due"}
+                    SegmentsCard(icon: "hourglass.bottomhalf.fill", title: "Today", count: viewModel.taskCount(cardCount: .today))
+                        .onTapGesture { selectedCard = .today; selectedSegment = "Today's Tasks" }
+
+                    SegmentsCard(icon: "flag.fill", title: "Over Due", count: viewModel.taskCount(cardCount: .overdue))
+                        .onTapGesture { selectedCard = .overdue; selectedSegment = "Over Due" }
                 }
             }
             .navigationTitle("Segments")
