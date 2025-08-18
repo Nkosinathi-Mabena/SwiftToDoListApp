@@ -9,15 +9,17 @@ import SwiftUI
 
 struct ToDoView: View {
     
-    @State private var selectedCard: String? = "Tasks"
-    @State private var selectedSegment: String = ""
+    @StateObject private var viewModel:TaskViewModel
+    @State private var selectedCard: CardType? = .tasks
+    @State private var selectedSegment: String = "Incompleted"
     @State private var isTaskChecked = false
     @State private var showAddTaskSheet = false
-    @State private var taskDescription = ""
-    @State private var taskDate = Date()
-    @State private var taskPriority = "Low"
-    @State private var reminderEnabled = true
-
+    @State var selectedTask: Task?
+    
+    init(repository: TaskRepositoryProtocol) {
+            _viewModel = StateObject(wrappedValue: TaskViewModel(repository: repository)) // this will create the viewmodel and pass the repository it received 
+        }
+            
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
 
@@ -26,37 +28,43 @@ struct ToDoView: View {
                     .font(.largeTitle)
                     .bold()
                 Spacer()
-                Image(systemName: "plus")
-                    .font(.title2)
-                    .onTapGesture {showAddTaskSheet = true}
+               Button {
+                   showAddTaskSheet = true
+                   selectedTask = nil
+               } label: {
+                   Image(systemName: "plus")
+                       .font(.title2)
+               }
             }
             
                 VStack(spacing: 15) {
                 HStack(spacing: 15) {
-                    ReminderCard(icon: "hourglass.bottomhalf.fill", title: "All Task", count: 2)
-                        .onTapGesture { selectedCard = "Tasks" }
-                    ReminderCard(icon: "exclamationmark.triangle.fill", title: "priority", count: 1)
-                        .onTapGesture { selectedCard = "priority" }
+                    SegmentsCard(icon: "house.fill", title: "All Task", count: viewModel.taskCount(cardCount: .tasks))
+                        .onTapGesture { selectedCard = .tasks; selectedSegment = "Incompleted" }
+
+                    SegmentsCard(icon: "exclamationmark.triangle.fill", title: "priority", count: viewModel.taskCount(cardCount: .priority))
+                        .onTapGesture { selectedCard = .priority; selectedSegment = "Low" }
+
 
                 }
                 HStack(spacing: 15) {
-                    ReminderCard(icon: "house.fill", title: "Today", count: 2)
-                        .onTapGesture { selectedCard = "Today" }
-                    ReminderCard(icon: "heart.circle", title: "Reminders", count: 2)
-                        .onTapGesture { selectedCard = "Reminders" }
+                    SegmentsCard(icon: "hourglass.bottomhalf.fill", title: "Today", count: viewModel.taskCount(cardCount: .today))
+                        .onTapGesture { selectedCard = .today; selectedSegment = "Today's Tasks" }
+
+                    SegmentsCard(icon: "flag.fill", title: "Over Due", count: viewModel.taskCount(cardCount: .overdue))
+                        .onTapGesture { selectedCard = .overdue; selectedSegment = "Over Due" }
                 }
             }
             .navigationTitle("Segments")
-            
             
             Text("Tasks")
                 .font(.largeTitle)
                 .bold()
                 .frame(alignment: .leading)
             
-            if !SegmentOptionsData.getOptions(for: selectedCard).isEmpty {
-                Picker("Select", selection: $selectedSegment) {
-                    ForEach(SegmentOptionsData.getOptions(for: selectedCard), id: \.self) { option in
+            if let selectedCard, !selectedCard.options.isEmpty{
+                Picker("Select", selection: $selectedSegment){
+                    ForEach(selectedCard.options, id: \.self){ option in // id: \.self provides key path since cardType doesn't conform to Identifialble
                         Text(option).tag(option)
                     }
                 }
@@ -65,8 +73,11 @@ struct ToDoView: View {
             VStack {
                 ScrollView {
                     LazyVStack(spacing: 13) {
-                        ForEach(0..<10, id: \.self) { _ in
-                            TaskCardView(priority: "High",date: "25 Sep 2025",description: "Work on Methodology for belgium campus", isCheck: $isTaskChecked)
+                        ForEach(viewModel.filteredTasks(selectedCard: selectedCard, selectedSegment: selectedSegment)) { task in
+                            TaskCardView(task: task, viewModel: viewModel)
+                                .onTapGesture{
+                                    selectedTask = task
+                                }
                         }
                     }
                     .padding(.vertical)
@@ -78,21 +89,17 @@ struct ToDoView: View {
         }
         .padding()
         .sheet(isPresented: $showAddTaskSheet) {
-            AddTaskSheetView(
-                taskDescription: $taskDescription,
-                taskDate: $taskDate,
-                taskPriority: $taskPriority,
-                reminderEnabled: $reminderEnabled
-            ) {
-                showAddTaskSheet = false
-            }
+                  AddTaskSheetView(viewModel: viewModel)
+              }
+        .sheet(item: $selectedTask) { task in // now selectedTask is a trigger
+            AddTaskSheetView(viewModel: viewModel, taskToEdit: task)
         }
     }
 }
 
-struct RemindersView_Previews: PreviewProvider {
+struct ToDoView_Previews: PreviewProvider {
     static var previews: some View {
-        ToDoView()
+        ToDoView(repository: TaskRepository())
     }
 }
 

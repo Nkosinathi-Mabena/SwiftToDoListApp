@@ -19,12 +19,5 @@ struct Task: Identifiable{
     var dueDate: Date
     var priority: Priority
     var reminderEnabled: Bool
-    
-    init(id: UUID, description: String, dueDate: Date, priority: Priority, reminderEnabled: Bool) {
-        self.id = id
-        self.description = description
-        self.dueDate = dueDate
-        self.priority = priority
-        self.reminderEnabled = reminderEnabled
-    }
+    var isCompleted: Bool
 }
