@@ -10,16 +10,17 @@ enum CardType: String, CaseIterable {
     case priority = "priority"
     case overdue = "Over Due"
     case today = "Today"
-}
-
-struct SegmentOptionsData {
-    static func getOptions(for card: CardType?) -> [String] {
-        switch card {
-        case .tasks: return ["Incompleted", "Completed"]
-        case .priority: return ["Low", "Medium", "High"]
-        case .overdue: return ["Over Due"]
-        case .today: return ["Today's Tasks"]
-        case .none: return []
+    
+    var options: [String]  {
+        switch self {
+        case .tasks:
+            return ["Incompleted", "Completed"]
+        case .priority:
+            return ["Low", "Medium", "High"]
+        case .overdue:
+            return ["Over Due"]
+        case .today:
+            return ["Today's Tasks"]
         }
     }
 }

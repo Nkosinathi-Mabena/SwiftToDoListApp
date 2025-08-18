@@ -9,13 +9,16 @@ import SwiftUI
 
 struct ToDoView: View {
     
-    @StateObject private var viewModel = TaskViewModel()
+    @StateObject private var viewModel:TaskViewModel
     @State private var selectedCard: CardType? = .tasks
     @State private var selectedSegment: String = "Incompleted"
     @State private var isTaskChecked = false
     @State private var showAddTaskSheet = false
-    
     @State var selectedTask: Task?
+    
+    init(repository: TaskRepositoryProtocol) {
+            _viewModel = StateObject(wrappedValue: TaskViewModel(repository: repository)) // this will create the viewmodel and pass the repository it received 
+        }
             
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -59,9 +62,9 @@ struct ToDoView: View {
                 .bold()
                 .frame(alignment: .leading)
             
-            if !SegmentOptionsData.getOptions(for: selectedCard).isEmpty {
-                Picker("Select", selection: $selectedSegment) {
-                    ForEach(SegmentOptionsData.getOptions(for: selectedCard), id: \.self) { option in
+            if let selectedCard, !selectedCard.options.isEmpty{
+                Picker("Select", selection: $selectedSegment){
+                    ForEach(selectedCard.options, id: \.self){ option in // id: \.self provides key path since cardType doesn't conform to Identifialble
                         Text(option).tag(option)
                     }
                 }
@@ -96,7 +99,7 @@ struct ToDoView: View {
 
 struct ToDoView_Previews: PreviewProvider {
     static var previews: some View {
-        ToDoView()
+        ToDoView(repository: TaskRepository())
     }
 }
 

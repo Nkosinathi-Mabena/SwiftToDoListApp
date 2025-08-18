@@ -13,7 +13,7 @@ final class TaskViewModel: ObservableObject {
     
     private let repository: TaskRepositoryProtocol
     
-    init(repository: TaskRepositoryProtocol = TaskRepository()){
+    init(repository: TaskRepositoryProtocol){
         self.repository = repository
         fetchTasks()
     }
@@ -71,6 +71,4 @@ final class TaskViewModel: ObservableObject {
             }.count
         }
     }
-
-
 }

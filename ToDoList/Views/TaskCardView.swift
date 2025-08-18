@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskCardView: View {
     var task: Task
-        @ObservedObject var viewModel: TaskViewModel
+    @ObservedObject var viewModel: TaskViewModel
     
     var priorityColor: Color {
             switch task.priority {
@@ -39,7 +39,7 @@ struct TaskCardView: View {
             }
             .frame(width: 180, alignment: .leading) 
             .padding(.leading,8)
-
+            
             Text(task.priority.rawValue)
                 .font(.system(size: 12))
                 .foregroundColor(priorityColor)
@@ -47,8 +47,7 @@ struct TaskCardView: View {
                 .background(priorityColor.opacity(0.1))
                 .cornerRadius(8)
                 .padding(.leading, 8)
-
-       }
+        }
         .padding()
         .frame(maxWidth: .infinity)
         .background(Color(.systemGray6))
@@ -56,15 +55,13 @@ struct TaskCardView: View {
     }
 }
 
-
 struct TaskView_Previews: PreviewProvider {
     static var previews: some View {
         
-        let sampleTask = Task(id: UUID(),description: "Work on methodology the end",dueDate: Date(),priority: .low,reminderEnabled: true,isCompleted: false
-        )
+        let sampleTask = Task(id: UUID(),description: "Work on methodology the end",dueDate: Date(),priority: .low,reminderEnabled: true,isCompleted: false)
         
-        let viewModel = TaskViewModel()
-        
+        let viewModel = TaskViewModel(repository: TaskRepository())
+
         TaskCardView(task: sampleTask, viewModel: viewModel)
             .previewLayout(.sizeThatFits)
             .padding()

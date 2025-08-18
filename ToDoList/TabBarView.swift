@@ -11,7 +11,7 @@ struct TabBarView: View{
     
     var body: some View{
         TabView(){
-            ToDoView()
+            ToDoView(repository: TaskRepository())
                 .tabItem{
                     Image(systemName: "doc.plaintext")
                     Text("Tasks")
