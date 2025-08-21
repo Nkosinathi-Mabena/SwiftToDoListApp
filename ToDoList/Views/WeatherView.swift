@@ -9,17 +9,18 @@ import SwiftUI
 
 struct WeatherView: View {
     var body: some View {
-        VStack(spacing: 0) {
-                   WeatherInfoCard(
-                       location: "Johannesburg",
-                       icon: "sun.max.fill",
-                       temperature: "23°C",
-                       description: "Sunny",
-                       date: "17 Aug 2025"
-                   )
-                   
-                   ForecastCardRow()
-               }
+        VStack(spacing: 20) {
+            WeatherInfoCard(
+                location: "Johannesburg",
+                icon: "sun.max.fill",
+                temperature: "23°C",
+                description: "Sunny",
+                date: "17 Aug 2025",
+                sunrise: "5:35",
+                sunset: "17:50"
+            )
+            ForecastCardRow()
+        }
     }
 }
 

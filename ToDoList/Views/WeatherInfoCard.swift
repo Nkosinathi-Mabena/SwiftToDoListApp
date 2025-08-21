@@ -13,6 +13,8 @@ struct WeatherInfoCard: View {
     var temperature: String
     var description: String
     var date: String
+    var sunrise: String
+    var sunset: String
     
     var body: some View {
         VStack(spacing: 20) {
@@ -22,6 +24,10 @@ struct WeatherInfoCard: View {
                 
                 Text(location)
                     .font(.title)
+                    .bold()
+                
+                Text(date)
+                    .font(.subheadline)
                     .bold()
             }
             .padding()
@@ -38,8 +44,29 @@ struct WeatherInfoCard: View {
             Text(description)
                 .font(.title2)
             
-            Text(date)
-                .font(.subheadline)
+            HStack(spacing:60){
+                Text("Sunrise: ") +
+                Text(sunrise)
+                    .bold()
+                Text("Sunset: ") +
+                Text(sunset)
+                    .bold()
+            }
         }
+    }
+}
+
+
+struct WeatherInfoCard_Previews: PreviewProvider {
+    static var previews: some View {
+        WeatherInfoCard(
+            location: "Johannesburg",
+            icon: "sun.max.fill",
+            temperature: "23°C",
+            description: "Sunny",
+            date: "17 Aug 2025",
+            sunrise: "05:35",
+            sunset: "17:50"
+        )
     }
 }
