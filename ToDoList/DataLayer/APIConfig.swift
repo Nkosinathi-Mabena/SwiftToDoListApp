@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct APIConfig{
+struct APIConfig {
     static var apiKey: String {
-        guard let key = Bundle.main.object(forInfoDictionaryKey: "WEATHER_API_KEY") as? String else{
-            fatalError("API key not set in Build Settings")
+        guard let key = ProcessInfo.processInfo.environment["WEATHER_API_KEY"] else {
+            fatalError("API key is not set in environment variables")
         }
         return key
     }
